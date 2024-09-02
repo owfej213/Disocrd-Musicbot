@@ -1,10 +1,10 @@
 module.exports = {
-    name:'ready',
+    name: 'ready',
     once: true,
 
     async execute(client) {
-      client.user.setActivity(`${client.config.prefix}help`);
+        client.user.setActivity(`${client.config.prefix}help`);
 
-      console.log(`Log in as ${client.user.username}!`);
-    }
-}
+        console.log(`Log in as ${client.user.username}!`);
+    },
+};

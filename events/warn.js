@@ -1,7 +1,7 @@
 module.exports = {
-    name:'warn',
+    name: 'warn',
 
     execute(warning) {
-        console.log('-----WARNING-----\n' + warning)
-    }
-}
+        console.log('-----WARNING-----\n' + warning);
+    },
+};

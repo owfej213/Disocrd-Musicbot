@@ -1,19 +1,18 @@
-const fs = require('fs')
+const fs = require('fs');
 
 module.exports = (client, path) => {
-    
-    const readslashcommands = dir => {
-        const slashFiles = fs.readdirSync(dir)
+    const readslashcommands = (dir) => {
+        const slashFiles = fs.readdirSync(dir);
 
-        for(const file of slashFiles){
-            const stat = fs.lstatSync(`${dir}/${file}`)
-            if(stat.isDirectory()){
-                readslashcommands(`${dir}/${file}`)
-            }else{
-                const slashcmd = require(`${dir}/${file}`)
-                client.slashcommands.set(slashcmd.data.name, slashcmd)
+        for (const file of slashFiles) {
+            const stat = fs.lstatSync(`${dir}/${file}`);
+            if (stat.isDirectory()) {
+                readslashcommands(`${dir}/${file}`);
+            } else {
+                const slashcmd = require(`${dir}/${file}`);
+                client.slashcommands.set(slashcmd.data.name, slashcmd);
             }
         }
-    }
-    readslashcommands(path)
-}
+    };
+    readslashcommands(path);
+};

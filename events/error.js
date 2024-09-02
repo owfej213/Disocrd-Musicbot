@@ -1,8 +1,7 @@
 module.exports = {
-    name:'error',
+    name: 'error',
 
     execute(error) {
-
-        console.log('-----ERROR-----\n' + error)
-    }
-}
+        console.log('-----ERROR-----\n' + error);
+    },
+};
