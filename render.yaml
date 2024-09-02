@@ -1,0 +1,11 @@
+services:
+  - type: web
+    runtime: node
+    name: discord-bot-gura
+    repo: https://github.com/owfej213/Disocrd-Musicbot-Gura
+    region: oregon
+    plan: free
+    branch: master
+    buildCommand: npm install
+    startCommand: node index.js
+    autoDeploy: true
