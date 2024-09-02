@@ -8,6 +8,7 @@ const handlePlayerEvents = require('./handlers/playerEventsHandler');
 const register = require('./handlers/registrar');
 const config = require('./config.json');
 const { QuickDB } = require('quick.db');
+const keepAlive = require('./keepAlive');
 
 const db = new QuickDB();
 
@@ -33,4 +34,5 @@ handleInteracrion(client, `${__dirname}/commands/slash`);
 handlePlayerEvents(client, `${__dirname}/events/player`);
 register(client);
 
+keepAlive();
 client.login(config.botToken);
