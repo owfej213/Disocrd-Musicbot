@@ -3,7 +3,7 @@ module.exports = {
     once: true,
 
     async execute(client) {
-        client.user.setActivity(`${client.config.prefix}help`);
+        client.user.setActivity(`/help`);
 
         console.log(`Log in as ${client.user.username}!`);
     },

@@ -14,18 +14,19 @@ module.exports = (client) => {
 
     (async () => {
         try {
-            // await rest.put(Routes.applicationCommands(client.config.botId), {
-            //     body: commandJsonData,
-            // });
-            await rest.put(
-                Routes.applicationGuildCommands(
-                    client.config.botId,
-                    '556122625966080008',
-                ),
-                {
-                    body: commandJsonData,
-                },
-            );
+            await rest.put(Routes.applicationCommands(client.config.botId), {
+                body: commandJsonData,
+            });
+            // 新增指令在伺服器(測試用)
+            // await rest.put(
+            //     Routes.applicationGuildCommands(
+            //         client.config.botId,
+            //         client.config.testGuildId,
+            //     ),
+            //     {
+            //         body: commandJsonData,
+            //     },
+            // );
         } catch (error) {
             console.error(error);
         }
