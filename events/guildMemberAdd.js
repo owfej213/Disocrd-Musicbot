@@ -7,6 +7,9 @@ module.exports = {
 
     async execute(member) {
         const guildDB = await member.client.db.get(member.guild.id);
+
+        if (!guildDB) return;
+
         const { welcomeChannel } = guildDB || null;
 
         if (!welcomeChannel) return;

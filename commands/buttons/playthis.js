@@ -63,6 +63,8 @@ module.exports = {
                 ephemeral: true,
             });
 
+        queue.addTrack(result.tracks[0]);
+
         const embed = new EmbedBuilder();
 
         if (result.playlist) {
@@ -72,8 +74,8 @@ module.exports = {
             embed
                 .setTitle(tr.title)
                 .setURL(tr.url)
-                .setAuthor({ name: tr.author.name })
-                .setThumbnail(tr.thumbnail.url)
+                .setAuthor({ name: tr.author.name, url: tr.author.url })
+                .setThumbnail(tr.thumbnail)
                 .addFields([
                     { name: '**數量**', value: `${count}首`, inline: true },
                     {
@@ -98,9 +100,6 @@ module.exports = {
                     },
                 ]);
         }
-        result.playlist
-            ? queue.addTracks(result.tracks)
-            : queue.addTrack(result.tracks[0]);
 
         if (!queue.node.isPlaying()) queue.node.play();
 
