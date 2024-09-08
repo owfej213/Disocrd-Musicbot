@@ -14,7 +14,7 @@ export async function execute(interaction) {
     if (history.isEmpty()) {
         return interaction.reply({
             ephemeral: true,
-            embeds: [ErrorEmbed('❌ 沒有上一首歌曲可以播放')],
+            embeds: [ErrorEmbed('沒有上一首歌曲可以播放')],
         });
     }
 

@@ -8,7 +8,7 @@ export const data = {
 };
 
 export function execute(interaction, queue) {
-    let isPaused = queue.node.isPaused();
+    const isPaused = queue.node.isPaused();
 
     isPaused ? queue.node.resume() : queue.node.pause();
 

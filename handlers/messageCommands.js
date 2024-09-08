@@ -3,7 +3,7 @@ import { sync } from 'glob';
 export async function loadMessageCommands(client) {
     const commandFiles = sync('./commands/message/**/*.js');
 
-    console.log('Loading message commands');
+    console.log('Loading messageCommands');
 
     for (const file of commandFiles) {
         const command = await import(`../${file}`);

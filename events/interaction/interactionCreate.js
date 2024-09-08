@@ -34,16 +34,17 @@ export async function execute(interaction) {
     if (!command) {
         console.error(`\`${commandName}\` was not found.`);
         return interaction.reply({
-            embeds: [ErrorEmbed('❌ 無效的指令')],
+            embeds: [ErrorEmbed('無效的指令')],
             ephemeral: true,
         });
     }
+
     if (
         command.data.category === 'dev' &&
         !process.env.DEV_IDS.split(',').includes(interaction.user.id)
     ) {
         return interaction.reply({
-            embeds: [ErrorEmbed('❌ 只有開發者可以使用此功能')],
+            embeds: [ErrorEmbed('只有開發者可以使用此功能')],
             ephemeral: true,
         });
     }
@@ -56,13 +57,13 @@ export async function execute(interaction) {
 
         if (!memberChannel)
             return interaction.reply({
-                embeds: [ErrorEmbed('❌ 請先進入語音頻道')],
+                embeds: [ErrorEmbed('請先進入語音頻道')],
                 ephemeral: true,
             });
 
         if (selfChannel && selfChannel.id !== memberChannel.id) {
             return interaction.reply({
-                embeds: [ErrorEmbed('❌ 我們必須要在同一個語音頻道')],
+                embeds: [ErrorEmbed('我們必須要在同一個語音頻道')],
                 ephemeral: true,
             });
         }
@@ -70,7 +71,7 @@ export async function execute(interaction) {
 
     if (command.data.queueOnly && !queue?.isPlaying()) {
         return interaction.reply({
-            embeds: [ErrorEmbed('❌ 清單目前沒有音樂')],
+            embeds: [ErrorEmbed('清單目前沒有音樂')],
             ephemeral: true,
         });
     }

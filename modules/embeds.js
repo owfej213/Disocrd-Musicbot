@@ -19,7 +19,9 @@ export const BaseEmbed = ({ data = {}, color = Colors.Blurple } = {}) =>
  * @returns {EmbedBuilder} The created embed with red color.
  */
 export const ErrorEmbed = (text) =>
-    BaseEmbed({ data: { description: text }, color: Colors.Red });
+    BaseEmbed({ data: { description: text }, color: Colors.Red }).setTitle(
+        '錯誤',
+    );
 
 /**
  * Creates a success embed.
@@ -27,7 +29,9 @@ export const ErrorEmbed = (text) =>
  * @returns {EmbedBuilder} The created embed with green color.
  */
 export const SuccessEmbed = (text) =>
-    BaseEmbed({ data: { description: text }, color: Colors.Green });
+    BaseEmbed({ data: { description: text }, color: Colors.Green }).setTitle(
+        '成功',
+    );
 
 /**
  * Creates a warning embed.
@@ -35,7 +39,10 @@ export const SuccessEmbed = (text) =>
  * @returns {EmbedBuilder} The created embed with dark orange color.
  */
 export const WarningEmbed = (text) =>
-    BaseEmbed({ data: { description: text }, color: Colors.DarkOrange });
+    BaseEmbed({
+        data: { description: text },
+        color: Colors.DarkOrange,
+    }).setTitle('警告');
 
 /**
  * Creates an informational embed.

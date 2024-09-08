@@ -4,7 +4,7 @@ export const data = {
     command: new SlashCommandBuilder()
         .setName('avatar')
         .setNameLocalization('zh-TW', '頭像')
-        .setDescription('取得使用者頭貼')
+        .setDescription('取得使用者頭像')
         .addUserOption((option) =>
             option.setName('使用者').setDescription('成員').setRequired(true),
         ),

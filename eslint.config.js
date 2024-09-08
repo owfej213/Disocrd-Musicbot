@@ -1,13 +1,12 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-import eslintConfigPrettier from "eslint/config/prettier";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   pluginJs.configs.recommended,
   eslintConfigPrettier,
   {
     languageOptions: { globals: globals.node },
-    files: ["src/**/*.js", "scripts/**/*.js"],
     ignores: [".github/*", "node_modules", "docs/", "previews/"],
     rules: {
       "handle-callback-err": "off",

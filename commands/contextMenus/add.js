@@ -7,17 +7,20 @@ export const data = {
         .setName('Add to queue')
         .setNameLocalization('zh-TW', '加入播放清單')
         .setType(ApplicationCommandType.Message),
-    category: 'dev',
+    category: 'music',
     validateVC: true,
 };
 
 export async function execute(interaction) {
-    await interaction.deferReply();
-
     const channel = interaction.member.voice.channel;
 
     const query = interaction.options.getMessage('message').embeds[0].url;
 
+    if (!query)
+        return interaction.reply({
+            embeds: [ErrorEmbed('此訊息的嵌入內容沒有有效網址')],
+            ephemeral: true,
+        });
     const player = useMainPlayer();
 
     const result = await player.search(query, {
@@ -26,8 +29,8 @@ export async function execute(interaction) {
     });
 
     if (result.isEmpty())
-        return interaction.editReply({
-            content: `❌ 沒有任何結果`,
+        return interaction.reply({
+            embeds: [ErrorEmbed('沒有任何結果')],
             ephemeral: true,
         });
 
@@ -56,8 +59,8 @@ export async function execute(interaction) {
             }
         } catch {
             queue.destroy();
-            return interaction.editReply({
-                content: '❌ 無法加入你的頻道',
+            return interaction.reply({
+                embeds: [ErrorEmbed('無法加入你的頻道')],
                 ephemeral: true,
             });
         }
@@ -77,12 +80,13 @@ export async function execute(interaction) {
                 .setAuthor({ name: track.author });
         }
 
-        return await interaction.editReply({
+        return await interaction.reply({
             embeds: [embed],
         });
     } catch (err) {
-        return interaction.editReply({
-            embeds: [ErrorEmbed(`❌ 播放 \`${query}\` 時發生錯誤`)],
+        console.error(err);
+        return interaction.reply({
+            embeds: [ErrorEmbed(`播放 \`${query}\` 時發生錯誤`)],
         });
     }
 }

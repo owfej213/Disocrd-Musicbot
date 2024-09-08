@@ -48,14 +48,14 @@ export async function execute(interaction, queue) {
             ),
     );
 
-    const filter = queue.filters.ffmpeg.filters[0];
+    const filters = queue.filters.ffmpeg.filters[0];
 
     await interaction.reply({
         ephemeral: true,
         embeds: [
             SuccessEmbed(
                 `目前Filter為 ${
-                    filter ? capitalizeFirstLetter(filter) : '關閉'
+                    filters ? capitalizeFirstLetter(filters) : '關閉'
                 }`,
             ),
             WarningEmbed(

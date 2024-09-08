@@ -1,4 +1,5 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { PermissionsBitField, SlashCommandBuilder } from 'discord.js';
+import { ErrorEmbed, SuccessEmbed } from '../../../modules/embeds.js';
 
 export const data = {
     command: new SlashCommandBuilder()
@@ -15,10 +16,23 @@ export const data = {
 };
 
 export async function execute(interaction) {
+    if (
+        !interaction.member.permissions.has(
+            PermissionsBitField.Flags.ManageRoles,
+        )
+    ) {
+        return await interaction.reply({
+            embeds: [ErrorEmbed(`你必須要有管理權限才能使用此功能`)],
+            ephemeral: true,
+        });
+    }
+
     const db = interaction.client.db;
     const channel = interaction.options.getChannel('頻道');
-
+    console.log(channel);
     await db.set(interaction.guildId, { welcomeChannel: channel.id });
 
-    return await interaction.reply(`歡迎頻道已設定為 <#${channel.id}>`);
+    return await interaction.reply({
+        embeds: [SuccessEmbed(`歡迎頻道已設定為 <#${channel.id}>`)],
+    });
 }

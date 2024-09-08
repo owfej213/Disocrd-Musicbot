@@ -1,4 +1,4 @@
-import { Canvas } from 'canvas';
+import { createCanvas, loadImage } from 'canvas';
 import { AttachmentBuilder, Events } from 'discord.js';
 import path from 'path';
 
@@ -17,10 +17,10 @@ export async function execute(member) {
 
     if (!channel) return;
 
-    const canvas = Canvas.createCanvas(700, 300);
+    const canvas = createCanvas(700, 300);
     const ctx = canvas.getContext('2d');
-    const bg = await Canvas.loadImage(
-        path.join(__dirname, '../misc/pictures/bg.png'),
+    const bg = await loadImage(
+        path.join(import.meta.dirname, '../../misc/images/bg.png'),
     );
     let x = 0;
     let y = 0;
@@ -28,9 +28,9 @@ export async function execute(member) {
 
     x = 35;
     y = 35;
-    let radius = 15;
-    let width = 630;
-    let height = 230;
+    const radius = 15;
+    const width = 630;
+    const height = 230;
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
     ctx.lineTo(x + width - radius, y);
@@ -44,7 +44,7 @@ export async function execute(member) {
     ctx.closePath();
     ctx.fillStyle = 'rgba(92, 92, 92, 0.75)';
     ctx.fill();
-    const pfp = await Canvas.loadImage(
+    const pfp = await loadImage(
         member.user.displayAvatarURL({
             extension: 'png',
         }),

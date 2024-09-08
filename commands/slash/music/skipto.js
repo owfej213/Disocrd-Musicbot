@@ -22,7 +22,7 @@ export function execute(interaction, queue) {
     const trackNum = interaction.options.getNumber('number');
 
     if (trackNum > queue.tracks.size)
-        return interaction.reply({ embeds: [ErrorEmbed('❌ 輸入錯誤')] });
+        return interaction.reply({ embeds: [ErrorEmbed('輸入錯誤')] });
 
     queue.node.skipTo(trackNum - 1);
 

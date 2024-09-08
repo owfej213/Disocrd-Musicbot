@@ -33,7 +33,7 @@ export async function execute(interaction) {
 
     if (result.isEmpty())
         return interaction.editReply({
-            content: `❌ 沒有任何結果`,
+            embeds: [ErrorEmbed(`沒有任何結果`)],
             ephemeral: true,
         });
 
@@ -63,7 +63,7 @@ export async function execute(interaction) {
         } catch {
             queue.destroy();
             return interaction.editReply({
-                content: '❌ 無法加入你的頻道',
+                embeds: [ErrorEmbed(`無法加入你的頻道`)],
                 ephemeral: true,
             });
         }
@@ -87,8 +87,9 @@ export async function execute(interaction) {
             embeds: [embed],
         });
     } catch (err) {
+        console.log(err);
         return interaction.editReply({
-            embeds: [ErrorEmbed(`❌ 播放 \`${query}\` 時發生錯誤`)],
+            embeds: [ErrorEmbed(`播放 \`${query}\` 時發生錯誤`)],
         });
     }
 }

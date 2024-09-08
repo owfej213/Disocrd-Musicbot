@@ -1,14 +1,20 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { BaseEmbed, ErrorEmbed } from '../modules/embeds.js';
 
-export async function replyQueue(interaction, queue, page = 1) {
+export async function replyQueue(interaction, queue, pageNumber = 1) {
     const songsData = queue.tracks.data;
 
     const itemPrePage = 10;
 
     const maxPage = Math.ceil(songsData.length / itemPrePage);
 
-    if (page > maxPage)
+    if (maxPage === 0)
+        return interaction.reply({
+            ephemeral: true,
+            embeds: [ErrorEmbed(`目前沒有待播歌曲`)],
+        });
+
+    if (pageNumber > maxPage)
         return interaction.reply({
             ephemeral: true,
             embeds: [ErrorEmbed(`目前總共只有${maxPage}頁的歌曲`)],
@@ -67,7 +73,7 @@ export async function replyQueue(interaction, queue, page = 1) {
 
     await interaction.reply({
         ephemeral: true,
-        embeds: [embeds[page - 1]],
+        embeds: [embeds[pageNumber - 1]],
         components: [row],
     });
 

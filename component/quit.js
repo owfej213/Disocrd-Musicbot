@@ -3,7 +3,6 @@ import { SuccessEmbed } from '../modules/embeds.js';
 export const data = {
     id: 'quit',
     category: 'music',
-    queueOnly: true,
     validateVC: true,
 };
 

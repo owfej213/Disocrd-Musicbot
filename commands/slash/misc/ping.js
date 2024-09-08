@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
+import { SuccessEmbed } from '../../../modules/embeds.js';
 
 export const data = {
     command: new SlashCommandBuilder()
@@ -9,5 +10,7 @@ export const data = {
 };
 
 export function execute(interaction) {
-    return interaction.reply(`延遲為${interaction.client.ws.ping}ms`);
+    return interaction.reply({
+        embeds: [SuccessEmbed(`延遲為${interaction.client.ws.ping}ms`)],
+    });
 }
