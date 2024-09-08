@@ -1,8 +1,12 @@
-module.exports = {
-    name: 'error',
-    execute(queue, error) {
-        console.log('-----DISCORD-PLAYER ERROR-----\n' + error);
+import { GuildQueueEvent } from 'discord-player';
 
-        queue.metadata.channel.send(`:x: | 發生錯誤!`);
-    },
+export const data = {
+    name: GuildQueueEvent.Error,
+    type: 'player',
 };
+
+export function execute(queue, error) {
+    console.log('-----DISCORD-PLAYER ERROR-----\n' + error);
+
+    queue.metadata.channel.send(`:x: 發生錯誤`);
+}

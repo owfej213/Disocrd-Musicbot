@@ -1,18 +1,23 @@
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const { YoutubeiExtractor } = require('discord-player-youtubei');
-const { Player } = require('discord-player');
-const handleEvents = require('./handlers/eventsHandler');
-const handleCommands = require('./handlers/commandsHandler');
-const handleInteracrion = require('./handlers/interactionHandler');
-const handlePlayerEvents = require('./handlers/playerEventsHandler');
-const register = require('./handlers/registrar');
-const config = require('./config.json');
-const { QuickDB } = require('quick.db');
-const keepAlive = require('./keepAlive');
+import 'dotenv/config';
+import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import { YoutubeiExtractor } from 'discord-player-youtubei';
+import { Player } from 'discord-player';
+import { loadEvents } from './handlers/events.js';
+import { QuickDB } from 'quick.db';
 
-const db = new QuickDB();
+class ExtendedClient extends Client {
+    contextCommands = new Collection();
+    messageCommands = new Collection();
+    slashCommands = new Collection();
+    components = new Collection();
+    db = new QuickDB();
 
-const client = new Client({
+    constructor(options) {
+        super(options);
+    }
+}
+
+const client = new ExtendedClient({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
@@ -21,18 +26,17 @@ const client = new Client({
         GatewayIntentBits.MessageContent,
     ],
 });
-client.db = db;
-client.config = config;
-client.commands = new Collection();
-client.slashcommands = new Collection();
-client.player = new Player(client);
-client.player.extractors.register(YoutubeiExtractor, {});
 
-handleEvents(client, `${__dirname}/events`);
-handleCommands(client, `${__dirname}/commands/message`);
-handleInteracrion(client, `${__dirname}/commands/slash`);
-handlePlayerEvents(client, `${__dirname}/events/player`);
-register(client);
+const player = new Player(client);
 
-keepAlive();
-client.login(config.botToken);
+await player.extractors.register(YoutubeiExtractor, {
+    streamOptions: {
+        highWaterMark: 1 << 30,
+        useClient: 'ANDROID',
+    },
+});
+
+await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
+
+await loadEvents(client);
+await client.login(process.env.BOT_TOKEN);

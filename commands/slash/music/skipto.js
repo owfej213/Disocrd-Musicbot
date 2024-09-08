@@ -1,42 +1,32 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { SlashCommandBuilder } from 'discord.js';
+import { ErrorEmbed, SuccessEmbed } from '../../../modules/embeds.js';
 
-module.exports = {
-    data: new SlashCommandBuilder()
+export const data = {
+    command: new SlashCommandBuilder()
         .setName('skipto')
         .setNameLocalization('zh-TW', '跳至目標')
-        .setDescription('跳到指定編號的音樂')
+        .setDescription('跳到指定編號的歌曲')
         .addNumberOption((option) => {
             return option
                 .setName('number')
-                .setDescription('輸入要跳到的音樂編號')
-                .setMinValue(1)
-                .setRequired(true);
+                .setDescription('輸入要跳到的歌曲編號')
+                .setRequired(true)
+                .setMinValue(1);
         }),
-    run: async (interaction) => {
-        const trackNum = interaction.options.getNumber('number');
-
-        if (!interaction.member.voice.channelId)
-            return await interaction.reply({
-                content: '❌ | 請先進語音頻道!',
-                ephemeral: true,
-            });
-        if (
-            interaction.guild.members.me.voice.channelId &&
-            interaction.member.voice.channelId !==
-                interaction.guild.members.me.voice.channelId
-        )
-            return await interaction.reply({
-                content: '❌ | 我們必須要在同一個語音頻道!',
-                ephemeral: true,
-            });
-
-        const queue = interaction.client.player.nodes.get(interaction.guildId);
-
-        if (!queue) return await interaction.reply('❌ | 清單目前沒有音樂');
-
-        if (trackNum > queue.tracks.size)
-            return await interaction.reply('❌ | 輸入錯誤');
-        queue.node.skipTo(trackNum - 1);
-        return await interaction.reply(`已跳過${trackNum}首音樂!`);
-    },
+    category: 'music',
+    validateVC: true,
+    queueOnly: true,
 };
+
+export function execute(interaction, queue) {
+    const trackNum = interaction.options.getNumber('number');
+
+    if (trackNum > queue.tracks.size)
+        return interaction.reply({ embeds: [ErrorEmbed('❌ 輸入錯誤')] });
+
+    queue.node.skipTo(trackNum - 1);
+
+    return interaction.reply({
+        embeds: [SuccessEmbed(`已跳過${trackNum}首歌曲`)],
+    });
+}

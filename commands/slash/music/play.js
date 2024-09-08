@@ -1,14 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const {
-    EmbedBuilder,
-    ActionRowBuilder: row,
-    ButtonBuilder: button,
-    ButtonStyle,
-} = require('discord.js');
-const { QueryType } = require('discord-player');
+import { QueryType, useMainPlayer } from 'discord-player';
+import { SlashCommandBuilder } from 'discord.js';
+import { BaseEmbed, ErrorEmbed } from '../../../modules/embeds.js';
 
-module.exports = {
-    data: new SlashCommandBuilder()
+export const data = {
+    command: new SlashCommandBuilder()
         .setName('play')
         .setNameLocalization('zh-TW', '播放音樂')
         .setDescription('播放音樂')
@@ -18,160 +13,82 @@ module.exports = {
                 .setDescription('輸入關鍵字/音樂網址/播放清單網址')
                 .setRequired(true),
         ),
-    run: async (interaction) => {
-        await interaction.deferReply();
+    category: 'music',
+    validateVC: true,
+};
 
-        const query = interaction.options.getString('track');
+export async function execute(interaction) {
+    await interaction.deferReply();
 
-        if (!interaction.member.voice.channelId)
-            return await interaction.editReply({
-                content: '❌ | 請先進語音頻道!',
-                ephemeral: true,
-            });
-        if (
-            interaction.guild.members.me.voice.channelId &&
-            interaction.member.voice.channelId !==
-                interaction.guild.members.me.voice.channelId
-        )
-            return await interaction.editReply({
-                content: '❌ | 我們必須要在同一個語音頻道!',
-                ephemeral: true,
-            });
+    const channel = interaction.member.voice.channel;
 
-        const queue = interaction.client.player.nodes.create(
-            interaction.guild,
+    const query = interaction.options.getString('track');
+
+    const player = useMainPlayer();
+
+    const result = await player.search(query, {
+        requestedBy: interaction.user,
+        searchEngine: QueryType.AUTO,
+    });
+
+    if (result.isEmpty())
+        return interaction.editReply({
+            content: `❌ 沒有任何結果`,
+            ephemeral: true,
+        });
+
+    try {
+        const { queue, track, searchResult } = await player.play(
+            channel,
+            result,
             {
-                metadata: {
-                    channel: interaction.channel,
-                    requestedBy: interaction.user,
+                nodeOptions: {
+                    metadata: {
+                        channel: interaction.channel,
+                        requestedBy: interaction.user,
+                    },
+                    volume: 80,
+                    selfDeaf: false,
+                    leaveOnEmpty: true,
+                    leaveOnEnd: false,
                 },
-                volume: 80,
-                selfDeaf: false,
-                leaveOnEmpty: true,
-                leaveOnEnd: false,
+                requestedBy: interaction.user,
             },
         );
+
         try {
             if (!queue.connection) {
-                await queue.connect(interaction.member.voice.channel);
+                await queue.connect(channel);
             }
         } catch {
             queue.destroy();
-            return await interaction.editReply({
-                content: '❌ | 無法加入你的頻道!',
+            return interaction.editReply({
+                content: '❌ 無法加入你的頻道',
                 ephemeral: true,
             });
         }
 
-        const result = await interaction.client.player.search(query, {
-            requestedBy: interaction.user,
-            searchEngine: QueryType.AUTO,
-        });
+        const embed = BaseEmbed();
 
-        if (result.isEmpty())
-            return await interaction.editReply({
-                content: `❌ | 沒有任何結果!`,
-                ephemeral: true,
+        if (searchResult.hasPlaylist()) {
+            const playlist = searchResult.playlist;
+            embed.setTitle(playlist.title).setURL(playlist.url).setAuthor({
+                name: playlist.author.name,
+                url: playlist.author.url,
             });
-
-        queue.addTrack(result.tracks[0]);
-
-        const embed = new EmbedBuilder();
-
-        if (result.playlist) {
-            const resultToJSON = result.toJSON();
-            const count = resultToJSON.tracks.length;
-            const tr = resultToJSON.playlist;
-            embed
-                .setTitle(tr.title)
-                .setURL(tr.url)
-                .setAuthor({ name: tr.author.name, url: tr.author.url })
-                .setThumbnail(tr.thumbnail)
-                .addFields([
-                    { name: '**數量**', value: `${count}首`, inline: true },
-                    {
-                        name: '**加入者**',
-                        value: `${interaction.user}`,
-                        inline: true,
-                    },
-                ]);
         } else {
-            const tr = result.toJSON().tracks[0];
-            console.log(tr);
             embed
-                .setTitle(tr.title)
-                .setURL(tr.url)
-                .setAuthor({ name: tr.author })
-                .setThumbnail(tr.thumbnail)
-                .addFields([
-                    { name: '**長度**', value: `${tr.duration}`, inline: true },
-                    {
-                        name: '**加入者**',
-                        value: `${interaction.user}`,
-                        inline: true,
-                    },
-                ]);
+                .setTitle(track.title)
+                .setURL(track.url)
+                .setAuthor({ name: track.author });
         }
 
-        if (!queue.node.isPlaying()) queue.node.play();
-
-        const row1 = new row().addComponents(
-            new button()
-                .setCustomId('back')
-                .setEmoji('⏮')
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel('回放'),
-            new button()
-                .setCustomId('pause')
-                .setEmoji('⏸')
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel('暫停'),
-            new button()
-                .setCustomId('loop')
-                .setEmoji('🔁')
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel('重複播放'),
-            new button()
-                .setCustomId('autoplay')
-                .setEmoji('🔀')
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel('自動播放'),
-            new button()
-                .setCustomId('skip')
-                .setEmoji('⏭️')
-                .setStyle(ButtonStyle.Secondary)
-                .setLabel('跳過'),
-        );
-        const row2 = new row().addComponents(
-            new button()
-                .setCustomId('playthis')
-                .setEmoji('↩')
-                .setStyle(ButtonStyle.Success)
-                .setLabel('播放這首'),
-            new button()
-                .setCustomId('np')
-                .setEmoji('▶')
-                .setStyle(ButtonStyle.Success)
-                .setLabel('正在播放'),
-            new button()
-                .setCustomId('queue')
-                .setEmoji('📜')
-                .setStyle(ButtonStyle.Success)
-                .setLabel('清單'),
-            new button()
-                .setCustomId('clearqueue')
-                .setEmoji('♻')
-                .setStyle(ButtonStyle.Danger)
-                .setLabel('清除'),
-            new button()
-                .setCustomId('quit')
-                .setEmoji('👋')
-                .setStyle(ButtonStyle.Danger)
-                .setLabel('離開'),
-        );
         return await interaction.editReply({
             embeds: [embed],
-            components: [row1, row2],
         });
-    },
-};
+    } catch (err) {
+        return interaction.editReply({
+            embeds: [ErrorEmbed(`❌ 播放 \`${query}\` 時發生錯誤`)],
+        });
+    }
+}

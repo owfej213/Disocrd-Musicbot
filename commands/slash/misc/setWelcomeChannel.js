@@ -1,7 +1,7 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { SlashCommandBuilder } from 'discord.js';
 
-module.exports = {
-    data: new SlashCommandBuilder()
+export const data = {
+    command: new SlashCommandBuilder()
         .setName('welcome')
         .setNameLocalization('zh-TW', '歡迎頻道')
         .setDescription('設定歡迎頻道')
@@ -11,12 +11,14 @@ module.exports = {
                 .setDescription('設定歡迎頻道')
                 .setRequired(true),
         ),
-    run: async (interaction) => {
-        const db = interaction.client.db;
-        const channel = interaction.options.getChannel('頻道');
-
-        await db.set(interaction.guildId, { welcomeChannel: channel.id });
-
-        return await interaction.reply(`歡迎頻道已設定為 <#${channel.id}>`);
-    },
+    category: 'misc',
 };
+
+export async function execute(interaction) {
+    const db = interaction.client.db;
+    const channel = interaction.options.getChannel('頻道');
+
+    await db.set(interaction.guildId, { welcomeChannel: channel.id });
+
+    return await interaction.reply(`歡迎頻道已設定為 <#${channel.id}>`);
+}

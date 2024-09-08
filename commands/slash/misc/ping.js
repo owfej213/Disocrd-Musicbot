@@ -1,11 +1,13 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+import { SlashCommandBuilder } from 'discord.js';
 
-module.exports = {
-    data: new SlashCommandBuilder()
+export const data = {
+    command: new SlashCommandBuilder()
         .setName('ping')
         .setNameLocalization('zh-TW', '延遲')
         .setDescription('顯示延遲'),
-    run: async (interaction) => {
-        return await interaction.reply(`延遲為${interaction.client.ws.ping}ms`);
-    },
+    category: 'misc',
 };
+
+export function execute(interaction) {
+    return interaction.reply(`延遲為${interaction.client.ws.ping}ms`);
+}
