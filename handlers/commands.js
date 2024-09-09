@@ -1,9 +1,10 @@
 import { sync } from 'glob';
 
-export async function loadContextCommands(client) {
-    const commandFiles = sync('./commands/contextMenus/**/*.js');
-
-    console.log('Loading contextCommands');
+export async function loadCommands(client) {
+    const commandFiles = sync('commands/**/*.js', {
+        ignore: 'commands/message/**',
+    });
+    console.log('Loading commands');
 
     for (const file of commandFiles) {
         const command = await import(`../${file}`);
@@ -19,6 +20,6 @@ export async function loadContextCommands(client) {
             );
 
         const cmdName = command.data.command.name;
-        client.contextCommands.set(cmdName, command);
+        client.commands.set(cmdName, command);
     }
 }

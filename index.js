@@ -6,9 +6,8 @@ import { loadEvents } from './handlers/events.js';
 import { QuickDB } from 'quick.db';
 
 class ExtendedClient extends Client {
-    contextCommands = new Collection();
     messageCommands = new Collection();
-    slashCommands = new Collection();
+    commands = new Collection();
     components = new Collection();
     db = new QuickDB();
 
@@ -39,4 +38,5 @@ await player.extractors.register(YoutubeiExtractor, {
 await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
 
 await loadEvents(client);
+
 await client.login(process.env.BOT_TOKEN);

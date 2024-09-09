@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { Collection, REST, Routes } from 'discord.js';
-import { loadSlashCommands } from '../handlers/slashCommands.js';
-import { loadContextCommands } from '../handlers/contextCommands.js';
+import { loadCommands } from '../handlers/commands.js';
 
 const envVariables = ['BOT_TOKEN', 'BOT_ID', 'DEV_GUILD'];
 
@@ -10,43 +9,23 @@ for (const variable of envVariables) {
         throw new Error(`[ENV] ${variable} is missing.`);
 }
 
-const client = {
-    slashCommands: new Collection(),
-    contextCommands: new Collection(),
-};
-await loadSlashCommands(client);
-await loadContextCommands(client);
+const client = { commands: new Collection() };
+await loadCommands(client);
 
-const { slashDevCommands, slashOtherCommands } = client.slashCommands.reduce(
+const { devCommands, otherCommands } = client.commands.reduce(
     (acc, { data }) => {
         const { command, category } = data;
 
         if (category === 'dev') {
-            acc.slashDevCommands.push(command.toJSON());
+            acc.devCommands.push(command.toJSON());
         } else {
-            acc.slashOtherCommands.push(command.toJSON());
+            acc.otherCommands.push(command.toJSON());
         }
 
         return acc;
     },
-    { slashDevCommands: [], slashOtherCommands: [] },
+    { devCommands: [], otherCommands: [] },
 );
-
-const { contextDevCommands, contextOtherCommands } =
-    client.contextCommands.reduce(
-        (acc, { data }) => {
-            const { command, category } = data;
-
-            if (category === 'dev') {
-                acc.contextDevCommands.push(command.toJSON());
-            } else {
-                acc.contextOtherCommands.push(command.toJSON());
-            }
-
-            return acc;
-        },
-        { contextDevCommands: [], contextOtherCommands: [] },
-    );
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
@@ -57,14 +36,14 @@ const registerCommand = async () => {
                 process.env.BOT_ID,
                 process.env.DEV_GUILD,
             ),
-            { body: [...slashDevCommands, ...contextDevCommands] },
+            { body: devCommands },
         );
         console.log(`Registered ${devData.length} dev commands.`);
 
         const otherData = await rest.put(
             Routes.applicationCommands(process.env.BOT_ID),
             {
-                body: [...slashOtherCommands, ...contextOtherCommands],
+                body: otherCommands,
             },
         );
         console.log(`Registered ${otherData.length} other commands.`);

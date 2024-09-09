@@ -8,7 +8,7 @@ export const data = {
         .addUserOption((option) =>
             option.setName('使用者').setDescription('成員').setRequired(true),
         ),
-    category: 'misc',
+    category: 'other',
 };
 
 export function execute(interaction) {

@@ -11,7 +11,8 @@ export async function execute(interaction) {
     if (
         !interaction.isChatInputCommand() &&
         !interaction.isButton() &&
-        !interaction.isContextMenuCommand()
+        !interaction.isContextMenuCommand() &&
+        !interaction.isStringSelectMenu()
     )
         return;
 
@@ -21,15 +22,9 @@ export async function execute(interaction) {
 
     if (commandName.includes('Btn')) return;
 
-    let command;
-
-    if (interaction.isMessageComponent()) {
-        command = interaction.client.components.get(commandName);
-    } else if (interaction.isChatInputCommand()) {
-        command = interaction.client.slashCommands.get(commandName);
-    } else if (interaction.isContextMenuCommand()) {
-        command = interaction.client.contextCommands.get(commandName);
-    }
+    const command = interaction.isMessageComponent()
+        ? interaction.client.components.get(commandName)
+        : interaction.client.commands.get(commandName);
 
     if (!command) {
         console.error(`\`${commandName}\` was not found.`);

@@ -1,8 +1,7 @@
 import { Events } from 'discord.js';
-import { loadSlashCommands } from '../../handlers/slashCommands.js';
+import { loadCommands } from '../../handlers/commands.js';
 import { loadComponents } from '../../handlers/component.js';
 import { loadMessageCommands } from '../../handlers/messageCommands.js';
-import { loadContextCommands } from '../../handlers/contextCommands.js';
 
 export const data = {
     name: Events.ClientReady,
@@ -10,8 +9,7 @@ export const data = {
 };
 
 export async function execute(client) {
-    await loadContextCommands(client);
-    await loadSlashCommands(client);
+    await loadCommands(client);
     await loadComponents(client);
     await loadMessageCommands(client);
 

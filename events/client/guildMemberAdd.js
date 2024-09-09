@@ -20,7 +20,7 @@ export async function execute(member) {
     const canvas = createCanvas(700, 300);
     const ctx = canvas.getContext('2d');
     const bg = await loadImage(
-        path.join(import.meta.dirname, '../../misc/images/bg.png'),
+        path.join(import.meta.dirname, '../../assets/images/bg.png'),
     );
     let x = 0;
     let y = 0;

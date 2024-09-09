@@ -12,7 +12,7 @@ export const data = {
                 .setDescription('設定歡迎頻道')
                 .setRequired(true),
         ),
-    category: 'misc',
+    category: 'other',
 };
 
 export async function execute(interaction) {
