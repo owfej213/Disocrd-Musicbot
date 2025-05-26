@@ -28,8 +28,9 @@ export async function execute(interaction) {
     }
 
     const db = interaction.client.db;
+
     const channel = interaction.options.getChannel('頻道');
-    console.log(channel);
+
     await db.set(interaction.guildId, { welcomeChannel: channel.id });
 
     return await interaction.reply({

@@ -1,34 +1,39 @@
 {
-  "name": "discord-bot-gura",
-  "version": "1.0.0",
-  "description": "discord-bot",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "register": "node scripts/register.js"
-  },
-  "author": "Rentolly",
-  "license": "GPL-3",
-  "dependencies": {
-    "@discord-player/equalizer": "^0.2.3",
-    "@discord-player/extractor": "^4.5.1",
-    "better-sqlite3": "^11.2.1",
-    "canvas": "^2.10.1",
-    "discord-player": "^6.7.1",
-    "discord-player-youtubei": "^1.2.6",
-    "discord.js": "^14.15.3",
-    "dotenv": "^16.4.5",
-    "glob": "^11.0.0",
-    "quick.db": "^9.1.7"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.10.0",
-    "eslint": "^9.10.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "globals": "^15.9.0",
-    "prettier": "^3.3.3"
-  }
+    "name": "discord-bot-gura",
+    "version": "1.0.0",
+    "description": "discord-bot",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "register": "node scripts/register.js"
+    },
+    "author": "Rentolly",
+    "license": "GPL-3",
+    "dependencies": {
+        "@discord-player/equalizer": "^0.2.3",
+        "@discord-player/extractor": "^7.1.0",
+        "@discordjs/opus": "^0.10.0",
+        "@discordjs/voice": "^0.18.0",
+        "axios": "^1.7.7",
+        "better-sqlite3": "^11.2.1",
+        "canvas": "^2.10.1",
+        "dayjs": "^1.11.13",
+        "discord-player": "^7.1.0",
+        "discord-player-youtubei": "^1.4.6",
+        "discord.js": "^14.15.3",
+        "dotenv": "^16.4.5",
+        "glob": "^11.0.0",
+        "node-cron": "^3.0.3",
+        "quick.db": "^9.1.7"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.10.0",
+        "eslint": "^9.10.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "globals": "^15.9.0",
+        "prettier": "^3.3.3"
+    }
 }

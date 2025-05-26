@@ -39,7 +39,7 @@ export function execute(message) {
             minArgs = 0,
             expertedArgs,
         } = command.data;
-        
+
         // 確保使用者是開發者
         if (
             category === 'dev' &&

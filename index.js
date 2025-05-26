@@ -30,12 +30,11 @@ const player = new Player(client);
 
 await player.extractors.register(YoutubeiExtractor, {
     streamOptions: {
-        highWaterMark: 1 << 30,
+        highWaterMark: 1 << 25,
+        quality: 'best',
         useClient: 'ANDROID',
     },
 });
-
-await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
 
 await loadEvents(client);
 
